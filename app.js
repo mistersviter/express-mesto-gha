@@ -23,9 +23,8 @@ app.use((req, res, next) => {
 app.use('/users', require('./routes/users'));
 app.use('/cards', require('./routes/cards'));
 
-app.get('/', (req, res) => {
-  res.status(404);
-  res.send('<h1>Страница не найдена</h1>');
+app.use((req, res) => {
+  res.status(404).send({ message: 'Ой, такого пути не существует' });
 });
 
 app.listen(PORT, () => {
