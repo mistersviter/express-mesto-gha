@@ -9,14 +9,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/yandex-praktikum/express-mesto-gha.git"
+    "url": "git+https://mistersviter/express-mesto-gha.git"
   },
   "author": "Tarabrin",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/yandex-praktikum/express-mesto-gha/issues"
+    "url": "https://github.com/mistersviter/express-mesto-gha/issues"
   },
-  "homepage": "https://github.com/yandex-praktikum/express-mesto-gha#readme",
+  "homepage": "https://github.com/mistersviter/express-mesto-gha#readme",
   "devDependencies": {
     "eslint": "^8.22.0",
     "eslint-config-airbnb-base": "^15.0.0",
