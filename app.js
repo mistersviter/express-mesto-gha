@@ -1,16 +1,19 @@
 const express = require('express');
-const path = require('path');
 const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
 
 const { PORT = 3000 } = process.env;
 
 const app = express();
 
-mongoose.connect('mongodb://localhost:27017/mestodb', {
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
+mongoose.connect('mongodb://127.0.0.1/mestodb', {
   useNewUrlParser: true,
-  useCreateIndex: true,
-  useFindAndModify: false,
 });
+
+app.use('/users', require('./routes/users'));
 
 app.get('/', (req, res) => {
   res.status(404);
