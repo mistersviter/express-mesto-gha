@@ -1,0 +1,25 @@
+{
+  "name": "pac",
+  "version": "1.0.0",
+  "description": "own server",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "npx eslint ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yandex-praktikum/express-mesto-gha.git"
+  },
+  "author": "Tarabrin",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/yandex-praktikum/express-mesto-gha/issues"
+  },
+  "homepage": "https://github.com/yandex-praktikum/express-mesto-gha#readme",
+  "devDependencies": {
+    "eslint": "^8.22.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.26.0"
+  }
+}
