@@ -56,7 +56,7 @@ module.exports.updateUserProfile = (req, res) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        res.status(ERROR_BAD_REQUEST).send({ message: 'Переданы некорректный id при обновлении профиля пользователя' });
+        res.status(ERROR_BAD_REQUEST).send({ message: 'Передан некорректный id при обновлении профиля пользователя' });
         return;
       }
       if (err.name === 'ValidationError') {
@@ -80,7 +80,7 @@ module.exports.updateUserAvatar = (req, res) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        res.status(ERROR_BAD_REQUEST).send({ message: 'Переданы некорректный id при обновлении аватара пользователя' });
+        res.status(ERROR_BAD_REQUEST).send({ message: 'Передан некорректный id при обновлении аватара пользователя' });
         return;
       }
       if (err.name === 'ValidationError') {
