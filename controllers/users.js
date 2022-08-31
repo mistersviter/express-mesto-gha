@@ -1,8 +1,11 @@
+const bcrypt = require('bcryptjs');
 const User = require('../models/user');
+
 const {
   ERROR_NOT_FOUND,
   ERROR_BAD_REQUEST,
   ERROR_DEFAULT,
+  SALT_ROUNDS,
 } = require('../utils/constants');
 
 module.exports.getUsers = (req, res) => {
@@ -30,9 +33,22 @@ module.exports.getUser = (req, res) => {
 };
 
 module.exports.createUser = (req, res) => {
-  const { name, about, avatar } = req.body;
+  const {
+    name,
+    about,
+    avatar,
+    email,
+    password,
+  } = req.body;
 
-  User.create({ name, about, avatar })
+  bcrypt.hash(password, SALT_ROUNDS)
+    .then((hash) => User.create({
+      name,
+      about,
+      avatar,
+      email,
+      password: hash,
+    }))
     .then((user) => res.status(201).send(user))
     .catch((err) => {
       if (err.name === 'ValidationError') {
