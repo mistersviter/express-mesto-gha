@@ -40,14 +40,14 @@ const userSchema = new mongoose.Schema({
 
 const rejectInvalidCredentials = () => Promise.reject(new Error('Неправильные почта или пароль'));
 
-userSchema.statics.findUserByCredentials = function findUserByCredentials(email, pass) {
+userSchema.statics.findUserByCredentials = function checkEmail(email, password) {
   return this.findOne({ email }).select('+password')
-    .then(({ password, ...user }) => {
+    .then((user) => {
       if (!user) {
         return rejectInvalidCredentials;
       }
 
-      return bcrypt.compare(pass, password)
+      return bcrypt.compare(password, user.password)
         .then((matched) => {
           if (!matched) {
             return rejectInvalidCredentials;

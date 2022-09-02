@@ -109,12 +109,24 @@ module.exports.updateUserAvatar = (req, res) => {
     });
 };
 
+module.exports.getUserInfo = (req, res, next) => {
+  const { _id } = req.user;
+  User.findById(_id)
+    .then((user) => {
+      if (!user) {
+        throw new Error(`${_id} Пользователь не найден`);
+      }
+      res.send(user);
+    })
+    .catch(next);
+};
+
 module.exports.login = (req, res) => {
   const { email, password } = req.body;
 
   User.findUserByCredentials(email, password)
-    .then((user) => {
-      const token = jwt.sign({ _id: user._id }, JWT_SECRET, {
+    .then(({ _id }) => {
+      const token = jwt.sign({ _id }, JWT_SECRET, {
         expiresIn: '7d',
       });
       res.cookie('jwt', token, {
@@ -124,16 +136,4 @@ module.exports.login = (req, res) => {
       res.send({ token });
     })
     .catch((err) => new Error({ message: err.message }));
-};
-
-module.exports.getUserInfo = (req, res, next) => {
-  const { _id } = req.user;
-  User.findById(_id)
-    .then((user) => {
-      if (!user) {
-        throw new Error('Пользователь не найден');
-      }
-      res.send(user);
-    })
-    .catch(next);
 };
