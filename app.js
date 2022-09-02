@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const { auth } = require('./middlewares/auth');
 const { login, createUser } = require('./controllers/users');
 
 const { ERROR_NOT_FOUND } = require('./utils/constants');
@@ -19,13 +20,7 @@ mongoose.connect('mongodb://127.0.0.1/mestodb', {
 app.post('/signin', login);
 app.post('/signup', createUser);
 
-app.use((req, res, next) => {
-  req.user = {
-    _id: '62fbc8bb1057897a5c0ab7bf',
-  };
-  next();
-});
-
+//app.use(auth);
 app.use('/users', require('./routes/users'));
 app.use('/cards', require('./routes/cards'));
 
