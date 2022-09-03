@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const isEmail = require('validator/lib/isEmail');
+const WrongDataError = require('../errors/WrongDataError');
+const AuthorizationError = require('../errors/AuthorizationError');
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -22,7 +24,7 @@ const userSchema = new mongoose.Schema({
       validator(link) {
         const regex = /https?:\/\/[www]?\.?[a-z0-9-._~:/?#[\]@!$&'()*+,;=]+/i;
         if (!regex.test(link)) {
-          throw new Error(`${link} Некорректная ссылка`);
+          throw new WrongDataError(`${link} Некорректная ссылка`);
         }
         return true;
       },
@@ -35,7 +37,7 @@ const userSchema = new mongoose.Schema({
     validate: {
       validator(email) {
         if (!isEmail(email)) {
-          throw new Error('Некорректный формат почты');
+          throw new WrongDataError('Некорректный формат почты');
         }
       },
     },
@@ -47,7 +49,7 @@ const userSchema = new mongoose.Schema({
   },
 }, { versionKey: false });
 
-const rejectInvalidCredentials = () => Promise.reject(new Error('Неправильные почта или пароль'));
+const rejectInvalidCredentials = () => Promise.reject(new AuthorizationError('Неправильные почта или пароль'));
 
 userSchema.statics.findUserByCredentials = function checkEmail(email, password) {
   return this.findOne({ email }).select('+password')

@@ -1,14 +1,20 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const { celebrate, Joi } = require('celebrate');
+const { celebrate, Joi, errors } = require('celebrate');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const { auth } = require('./middlewares/auth');
 const { login, createUser } = require('./controllers/users');
-
-const { ERROR_NOT_FOUND } = require('./utils/constants');
+const NotFoundError = require('./errors/NotFoundError');
 
 const { PORT = 3000 } = process.env;
+
+const errorHandler = (err, req, res, next) => {
+  const statusCode = err.statusCode || 500;
+  const message = statusCode === 500 ? 'На сервере произошла ошибка' : err.message;
+  res.status(statusCode).send({ message });
+  next();
+};
 
 const app = express();
 
@@ -41,8 +47,12 @@ app.use(auth);
 app.use('/users', require('./routes/users'));
 app.use('/cards', require('./routes/cards'));
 
-app.use((req, res) => {
-  res.status(ERROR_NOT_FOUND).send({ message: 'Ой, такого пути не существует' });
+app.use(errors());
+
+app.use(errorHandler);
+
+app.use((req, res, next) => {
+  next(new NotFoundError('Ой, такого пути не существует'));
 });
 
 app.listen(PORT);
