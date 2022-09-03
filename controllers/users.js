@@ -102,7 +102,7 @@ module.exports.login = (req, res, next) => {
         maxAge: 3600000,
         httpOnly: true,
       });
-      res.send({ token });
+      res.send({message: 'Успешный вход', token });
     })
     .catch(next);
 };
