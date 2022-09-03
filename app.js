@@ -47,12 +47,12 @@ app.use(auth);
 app.use('/users', require('./routes/users'));
 app.use('/cards', require('./routes/cards'));
 
-app.use(errors());
-
-app.use(errorHandler);
-
 app.use((req, res, next) => {
   next(new NotFoundError('Ой, такого пути не существует'));
 });
+
+app.use(errors());
+
+app.use(errorHandler);
 
 app.listen(PORT);
