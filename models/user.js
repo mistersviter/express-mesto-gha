@@ -49,19 +49,17 @@ const userSchema = new mongoose.Schema({
   },
 }, { versionKey: false });
 
-const rejectInvalidCredentials = () => Promise.reject(new AuthorizationError('Неправильные почта или пароль'));
-
 userSchema.statics.findUserByCredentials = function checkEmail(email, password) {
   return this.findOne({ email }).select('+password')
     .then((user) => {
       if (!user) {
-        return rejectInvalidCredentials;
+        return Promise.reject(new AuthorizationError('Неправильные почта или пароль'));
       }
 
       return bcrypt.compare(password, user.password)
         .then((matched) => {
           if (!matched) {
-            return rejectInvalidCredentials;
+            return Promise.reject(new AuthorizationError('Неправильные почта или пароль'));
           }
 
           return user;
