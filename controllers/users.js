@@ -43,7 +43,12 @@ module.exports.createUser = (req, res, next) => {
       email,
       password: hash,
     }))
-    .then((user) => res.status(201).send(user))
+    .then((user) => res.status(201).send({
+      name: user.name,
+      about: user.about,
+      avatar: user.avatar,
+      email: user.email,
+    }))
     .catch((err) => {
       if (err.code === 11000) {
         next(new ConflictError('Пользователь с такой почтой уже зарегистрирован'));
@@ -102,7 +107,7 @@ module.exports.login = (req, res, next) => {
         maxAge: 3600000,
         httpOnly: true,
       });
-      res.send({message: 'Успешный вход', token });
+      res.send({ message: 'Успешный вход', token });
     })
     .catch(next);
 };
