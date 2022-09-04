@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const NotFoundError = require('../errors/NotFoundError');
 const ConflictError = require('../errors/ConflictError');
+const WrongDataError = require('../errors/WrongDataError');
 
 const {
   SALT_ROUNDS,
@@ -51,7 +52,7 @@ module.exports.createUser = (req, res, next) => {
     }))
     .catch((err) => {
       if (err.code === 11000) {
-        next(new ConflictError('Пользователь с такой почтой уже зарегистрирован'));
+        return next(new ConflictError('Пользователь с такой почтой уже зарегистрирован'));
       }
       return next(err);
     });
@@ -67,7 +68,13 @@ module.exports.updateUserProfile = (req, res, next) => {
       }
       res.send(user);
     })
-    .catch(next);
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        next(new WrongDataError('Некорректные данные при обновлении профиля'));
+      } else {
+        next(err);
+      }
+    });
 };
 
 module.exports.updateUserAvatar = (req, res, next) => {
@@ -80,7 +87,13 @@ module.exports.updateUserAvatar = (req, res, next) => {
       }
       res.send(user);
     })
-    .catch(next);
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        next(new WrongDataError('Некорректные данные при обновлении аватара'));
+      } else {
+        next(err);
+      }
+    });
 };
 
 module.exports.getUserInfo = (req, res, next) => {
