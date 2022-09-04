@@ -4,17 +4,12 @@ const { celebrate, Joi, errors } = require('celebrate');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const { auth } = require('./middlewares/auth');
+const { errorHandler } = require('./middlewares/errorHandler');
 const { login, createUser } = require('./controllers/users');
 const NotFoundError = require('./errors/NotFoundError');
+const { REGEX } = require('./utils/constants');
 
 const { PORT = 3000 } = process.env;
-
-const errorHandler = (err, req, res, next) => {
-  const statusCode = err.statusCode || 500;
-  const message = statusCode === 500 ? 'На сервере произошла ошибка' : err.message;
-  res.status(statusCode).send({ message });
-  next();
-};
 
 const app = express();
 
@@ -37,7 +32,7 @@ app.post('/signup', celebrate({
   body: Joi.object().keys({
     name: Joi.string().min(2).max(30),
     about: Joi.string().min(2).max(30),
-    avatar: Joi.string().pattern(/https?:\/\/[www]?\.?[a-z0-9-._~:/?#[\]@!$&'()*+,;=]+/i),
+    avatar: Joi.string().pattern(REGEX),
     email: Joi.string().required().email(),
     password: Joi.string().required(),
   }),
@@ -46,6 +41,10 @@ app.post('/signup', celebrate({
 app.use(auth);
 app.use('/users', require('./routes/users'));
 app.use('/cards', require('./routes/cards'));
+
+app.get('/signout', (req, res) => {
+  res.clearCookie('jwt').send({ message: 'Выход' });
+});
 
 app.use((req, res, next) => {
   next(new NotFoundError('Ой, такого пути не существует'));
